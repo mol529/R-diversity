@@ -1,0 +1,10 @@
+Package: QuaProc
+Type: Package
+Title: Quantifying_processes
+Version: 0.1.0
+Author: mol
+Maintainer: mol <mol529@qq.com>
+Description: betaNTI
+License: GPL
+Encoding: UTF-8
+LazyData: true
