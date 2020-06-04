@@ -74,7 +74,7 @@ bigtree_cophenetic <- function(rooted_tree, subsize = 9000){
 ###########################################################################################################
 ###betaNTI
 ###########################################################################################################
-betaNTI <- function(community,cophenetic_dis,beta.reps = 999, filename="all_sample", nocore=2){
+betaNTI <- function(community,cophenetic_dis,beta.reps = 999, filename="all_sample", nocore=2,returnresult=F){
   com <- community
   cop_all <- cophenetic_dis
 
@@ -128,8 +128,11 @@ betaNTI <- function(community,cophenetic_dis,beta.reps = 999, filename="all_samp
   rownames(weighted.bNTI) = rownames(com1)
   colnames(weighted.bNTI) = rownames(com1)
 
-  #write.table(weighted.bNTI,file = paste(filename,"betaNTI.txt",sep = "_"),quote = F,row.names = T,col.names = T,sep = "\t")
+  write.table(weighted.bNTI,file = paste(filename,"betaNTI.txt",sep = "_"),quote = F,row.names = T,col.names = T,sep = "\t")
+
+  if (returnresult == T){
   return(weighted.bNTI)
+    }
 }
 
 
@@ -230,12 +233,12 @@ raup_crick_modified=function(spXsite, plot_names_in_col1=FALSE, classic_metric=F
     allreads1 <- sum(spXsite[a1,])
     com1list <- which(com1==1)
     com1_pro <- com_sum[com1list]
-    com1_pro <- allreads1*com1_pro/sum(com1_pro)
+    com1_pro <- allreads1*(com1_pro/sum(com1_pro))
 
     allreads2 <- sum(spXsite[a2,])
     com2list <- which(com2==1)
     com2_pro <- com_sum[com2list]
-    com2_pro <- allreads2*com2_pro/sum(com2_pro)
+    com2_pro <- allreads2*(com2_pro/sum(com2_pro))
 
 
     pairma <- matrix(0,nrow=2,ncol=n_sp)
