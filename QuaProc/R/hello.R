@@ -548,7 +548,7 @@ raup_crick_modified_split=function(spXsite,startn,endn, plot_names_in_col1=FALSE
 
   ##build a site by site matrix for the results, with the names of the sites in the row and col names:
   numrow <- endn - startn + 1
-  results<-matrix(data=NA, nrow=numrow, ncol=n_sites, dimnames=list(row.names(spXsite)[startn,endn], row.names(spXsite)))
+  results<-matrix(data=NA, nrow=numrow, ncol=n_sites, dimnames=list(row.names(spXsite)[startn:endn], row.names(spXsite)))
 
 
   ##for each pair of sites (duplicates effort now to make a full matrix instead of a half one- but this part should be minimal time as compared to the null model building)
