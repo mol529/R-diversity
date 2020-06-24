@@ -268,7 +268,9 @@ raup_crick_modified=function(spXsite, plot_names_in_col1=FALSE, classic_metric=F
 
   ##null_array will hold the actual null distribution values.  Each element of the array corresponds to a null distribution for each combination of alpha values.  The alpha_table is used to point to the correct null distribution- the row numbers of alpha_table correspond to the [[x]] indices of the null_array.  Later the function will find the row of alpha_table with the right combination of alpha values.  That row number is used to identify the element of null_array that contains the correct null distribution for that combination of alpha levels.
   null_array<-list()
-
+  
+ sfInit(parallel = TRUE, cpus = nocore)
+ sfLibrary(vegan)
   ##looping over each combination of alpha levels:
   for(b1 in 1:length(alpha_levels)){
     for(b2 in b1:length(alpha_levels)){
@@ -276,11 +278,11 @@ raup_crick_modified=function(spXsite, plot_names_in_col1=FALSE, classic_metric=F
       #cl <- makeCluster(nocore)
       #results <- parLapply(cl,1:reps,func_subRC,spXsite <- spXsite,alpha_levels<-alpha_levels,occur <- occur,a1 <- b1,a2 <- b2)
       #stopCluster(cl)
-      sfInit(parallel = TRUE, cpus = nocore)
-			sfLibrary(vegan)
-			sfExport("spXsite", "alpha_levels", "occur","b1","b2")
-			results <- sfLapply(1:reps,func_subRC,spXsite <- spXsite,alpha_levels<-alpha_levels,occur <- occur,a1 <- b1,a2 <- b2)
-			sfStop()
+      #sfInit(parallel = TRUE, cpus = nocore)
+      #sfLibrary(vegan)
+      sfExport("spXsite", "alpha_levels", "occur","b1","b2")
+      results <- sfLapply(1:reps,func_subRC,spXsite <- spXsite,alpha_levels<-alpha_levels,occur <- occur,a1 <- b1,a2 <- b2)
+      #sfStop()
       null_shared_spp <- as.matrix(rbind(results))
 
 
@@ -297,7 +299,7 @@ raup_crick_modified=function(spXsite, plot_names_in_col1=FALSE, classic_metric=F
 
     }
   }
-
+sfStop()
   ##create a new column with both alpha levels to match on:
   alpha_table$matching<-paste(alpha_table[,1], alpha_table[,2], sep="_")
 
