@@ -151,7 +151,7 @@ raup_crick_modified=function(spXsite, plot_names_in_col1=FALSE, classic_metric=F
 
   ##this section moves plot names in column 1 (if specified as being present) into the row names of the matrix and drops the column of names
   library(vegan)
-  library(parallel)
+  library(snowfall)
 
   if(plot_names_in_col1){
     row.names(spXsite)<-spXsite[,1]
@@ -187,8 +187,8 @@ raup_crick_modified=function(spXsite, plot_names_in_col1=FALSE, classic_metric=F
 
   #构建并行函数
   func_subRC <- function(n,spXsite,alpha_levels,occur,a1,a2){
-    library(parallel)
-    library(vegan)
+    #library(parallel)
+    #library(vegan)
     n_sp <- ncol(spXsite)
     gamma <- colnames(spXsite)
     com_sum <- apply(spXsite,2,sum)
@@ -273,9 +273,14 @@ raup_crick_modified=function(spXsite, plot_names_in_col1=FALSE, classic_metric=F
   for(b1 in 1:length(alpha_levels)){
     for(b2 in b1:length(alpha_levels)){
 
-      cl <- makeCluster(nocore)
-      results <- parLapply(cl,1:reps,func_subRC,spXsite <- spXsite,alpha_levels<-alpha_levels,occur <- occur,a1 <- b1,a2 <- b2)
-      stopCluster(cl)
+      #cl <- makeCluster(nocore)
+      #results <- parLapply(cl,1:reps,func_subRC,spXsite <- spXsite,alpha_levels<-alpha_levels,occur <- occur,a1 <- b1,a2 <- b2)
+      #stopCluster(cl)
+      sfInit(parallel = TRUE, cpus = nocore)
+			sfLibrary(vegan)
+			sfExport("spXsite", "alpha_levels", "occur","b1","b2")
+			results <- sfLapply(1:reps,func_subRC,spXsite <- spXsite,alpha_levels<-alpha_levels,occur <- occur,a1 <- b1,a2 <- b2)
+			sfStop()
       null_shared_spp <- as.matrix(rbind(results))
 
 
