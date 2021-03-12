@@ -91,6 +91,7 @@ betaNTI <- function(com,
                     nbin=5,
                     mth_snowfall=F){
   print(paste0("Process begin: ",Sys.time()))
+  print(paste0("This com table is a ",nrow(com)," x ",ncol(com)," matrix."))
   t_start=Sys.time()
   
   if(mth_snowfall){
@@ -249,6 +250,7 @@ raup_crick_modified=function(comm,
   ##comm: a species by site matrix, with row names for plots.  
   ##Note that the choice of how many plots (rows) to include has a real impact on the metric, as species and their occurrence frequencies across the set of plots is used to determine gamma and the frequency with which each species is drawn from the null model
   print(paste0("RCbray begin: ",Sys.time()))
+  print(paste0("This com table is a ",nrow(comm)," x ",ncol(comm)," matrix."))
   t_start = Sys.time()
   
   if(mth_snowfall){
@@ -379,8 +381,9 @@ raup_crick_modified=function(comm,
   }
   
   ttl_reps <- nrow(vfsmmy)
-  left_reps <- ttl_reps - nocore
-  print(paste0("Run ",nocore," reps"))
+  ncr10 <- ncr10*10
+  left_reps <- ttl_reps - ncr10
+  print(paste0("Run ",ncr10," reps"))
   t0=Sys.time()
   if(mth_snowfall){
     results <- sfLapply((left_reps+1):ttl_reps,func_subRC,vfsmmy <- vfsmmy, comm <- comm,alpha_levels<-alpha_levels,occur <- occur)
@@ -389,8 +392,8 @@ raup_crick_modified=function(comm,
   }
   null_dist_last <- matrix(unlist(results), nrow=3)
   srt <- format(Sys.time()-t0,digits=4)
-  print(paste0("Run",nocore,"reps null model time: ",srt))
-  print(paste0("All ",ttl_reps," reps time prediction: ",round(ttl_reps/nocore,digits = 0)," x ",srt ))
+  print(paste0("Run ",ncr10," reps null model time: ",srt))
+  print(paste0("All ",ttl_reps," reps time prediction: ",round(ttl_reps/ncr10,digits = 0)," x ",srt ))
   rm(results)
   gc()
   
