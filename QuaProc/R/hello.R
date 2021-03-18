@@ -381,7 +381,7 @@ raup_crick_modified=function(comm,
   }
   
   ttl_reps <- nrow(vfsmmy)
-  ncr10 <- ncr10*10
+  ncr10 <- nocore*10
   left_reps <- ttl_reps - ncr10
   print(paste0("Run ",ncr10," reps"))
   t0=Sys.time()
