@@ -478,23 +478,27 @@ raup_crick_modified=function(comm,
   }
   
   print("a3")
-  null_dist <- as.matrix(null_dist)
+  #null_dist <- as.matrix(null_dist)
+  null_dist1 <- matrix(-999,nrow=3, ncol=ttl_reps)
+  class(null_dist1)
+  null_dist1 <- null_dist[1:3,]
+  class(null_dist1)
   print("a4")
   if(mth_snowfall){
     #sfInit(parallel = TRUE, cpus = nocore)
-    sfExport("disbray","reps", "comm_standard", "null_dist")
+    sfExport("disbray","reps", "comm_standard", "null_dist1")
     rcres <- sfLapply(1:nrow(disbray),func_mtr,
                       disbray <- disbray,
                       reps <- reps,
                       comm_standard<-comm_standard,
-                      null_dist <- null_dist)
+                      null_dist <- null_dist1)
     sfStop()
   } else {
     rcres <- parLapply(cl,1:nrow(disbray),func_mtr,
                        disbray <- disbray,
                        reps <- reps,
                        comm_standard<-comm_standard,
-                       null_dist <- null_dist)
+                       null_dist <- null_dist1)
     stopCluster(cl)
   }
   print("a5")
