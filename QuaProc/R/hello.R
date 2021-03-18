@@ -380,44 +380,28 @@ raup_crick_modified=function(comm,
     cl <- makeCluster(nocore)
   }
   
-  ttl_reps <- nrow(vfsmmy)
-  ncr10 <- nocore*10
-  left_reps <- ttl_reps - ncr10
-  print(paste0("Run ",ncr10," reps"))
-  t0=Sys.time()
-  if(mth_snowfall){
-    results <- sfLapply((left_reps+1):ttl_reps,func_subRC,vfsmmy <- vfsmmy, comm <- comm,alpha_levels<-alpha_levels,occur <- occur)
-  } else {
-    results <- parLapply(cl,(left_reps+1):ttl_reps,func_subRC,vfsmmy <- vfsmmy, comm <- comm,alpha_levels<-alpha_levels,occur <- occur)
-  }
-  null_dist_last <- matrix(unlist(results), nrow=3)
-  srt <- format(Sys.time()-t0,digits=4)
-  print(paste0("Run ",ncr10," reps null model time: ",srt))
-  print(paste0("All ",ttl_reps," reps time prediction: ",round(ttl_reps/ncr10,digits = 0)," x ",srt ))
-  rm(results)
-  gc()
+  ttl_reps <- nrow(vfsmmy)  
   
   
   if(nbin == 1) {
     t0=Sys.time()
     
     if(mth_snowfall){
-      results <- sfLapply(1:left_reps,func_subRC,vfsmmy <- vfsmmy, comm <- comm,alpha_levels<-alpha_levels,occur <- occur)
+      results <- sfLapply(1:ttl_reps,func_subRC,vfsmmy <- vfsmmy, comm <- comm,alpha_levels<-alpha_levels,occur <- occur)
     } else {
-      results <- parLapply(cl,1:left_reps,func_subRC,vfsmmy <- vfsmmy, comm <- comm,alpha_levels<-alpha_levels,occur <- occur)
+      results <- parLapply(cl,1:ttl_reps,func_subRC,vfsmmy <- vfsmmy, comm <- comm,alpha_levels<-alpha_levels,occur <- occur)
     }
     
     null_dist <- matrix(unlist(results), nrow=3)
-    null_dist <- rbind(null_dist,null_dist_last)
-    rm(results,null_dist_last)
+
+    rm(results)
     gc()
     print(paste0("null model time:",format(Sys.time()-t0,digits=4)))
   } else {
-    subn <- round(left_reps/nbin,digits = 0)
+    subn <- round(ttl_reps/nbin,digits = 0)
     print(paste0("Need ",nbin, " loops. Each loop has ",subn," reps." ))
     null_dist <- big.matrix(nrow=3, ncol=ttl_reps, init=-999, backingfile='parall_null_model_res.bin', descriptorfile='parall_null_model_res.desc')
-    null_dist[,(left_reps+1):ttl_reps] <- null_dist_last
-    rm(null_dist_last)
+
     
     for(i in 1:nbin){
       print(paste0("start bin",i))
