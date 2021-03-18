@@ -438,12 +438,13 @@ raup_crick_modified=function(comm,
   
   
   disbray <- as.matrix(vegan::vegdist(comm,method="bray"))
+  print("a1")
   disbray[upper.tri(disbray)] <- NA
   diag(disbray) <- NA
   disbray <- as.data.frame(disbray)
   disbray$id1 <- rownames(disbray)
   disbray <- tidyr::gather(disbray,key = "id2", value = "rn",na.rm = T,-id1)
-  
+  print("a2")
   rm(occur, comm,vfsmmy)
   gc()
   
@@ -476,9 +477,9 @@ raup_crick_modified=function(comm,
     return(c(disbray[nlm,1],disbray[nlm,2],round(rc, digits=3)))
   }
   
-  
+  print("a3")
   null_dist <- as.matrix(null_dist)
-  
+  print("a4")
   if(mth_snowfall){
     #sfInit(parallel = TRUE, cpus = nocore)
     sfExport("disbray","reps", "comm_standard", "null_dist")
@@ -496,7 +497,7 @@ raup_crick_modified=function(comm,
                        null_dist <- null_dist)
     stopCluster(cl)
   }
-  
+  print("a5")
   longRC <- t(matrix(unlist(rcres), nrow=3))
   colnames(longRC) <- c("Sample1","Sample2","RCbray")
   
