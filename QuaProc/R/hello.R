@@ -175,7 +175,7 @@ betaNTI <- function(com,
     print(paste0("null model time:",format(Sys.time()-t0)))
   } else {
     subn <- round(beta.reps/nbin,digits = 0)
-    rand.weighted.bMNTD.comp <- big.matrix(nrow=beta.reps*nr, ncol=3, init=-999, backingfile='parall_null_model_res.bin', descriptorfile='parall_null_model_res.desc')
+    rand.weighted.bMNTD.comp <- big.matrix(nrow=beta.reps*nr, ncol=3, init=-999, backingfile=paste('parall_bnti_',filename,'_null_model_res.bin'), descriptorfile=paste('parall_bnti_',filename,'_null_model_res.desc'))
     
     for(i in 1:nbin){
       print(paste0("start bin",i))
@@ -400,7 +400,7 @@ raup_crick_modified=function(comm,
   } else {
     subn <- round(ttl_reps/nbin,digits = 0)
     print(paste0("Need ",nbin, " loops. Each loop has ",subn," reps." ))
-    null_dist <- big.matrix(nrow=3, ncol=ttl_reps, init=-999, backingfile='parall_null_model_res.bin', descriptorfile='parall_null_model_res.desc')
+    null_dist <- big.matrix(nrow=3, ncol=ttl_reps, init=-999, backingfile=paste('parall_rcbray_',filename,'_null_model_res.bin'), descriptorfile=paste('parall_rcbray_',filename,'_null_model_res.desc'))
 
     
     for(i in 1:nbin){
@@ -423,7 +423,7 @@ raup_crick_modified=function(comm,
         
         null_dist[,((i-1)*subn+1):ttl_reps] <- matrix(unlist(results), nrow=3)
       } 
-      print(paste0("bin",i,"null model time:",format(Sys.time()-t0,digits=4)))
+      print(paste0("bin",i," null model time:",format(Sys.time()-t0,digits=4)))
       rm(results)
       gc()
     }
